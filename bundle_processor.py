@@ -386,8 +386,6 @@ if __name__ == '__main__':
     bundles = load_sample_bundles()
     bp = BundleProcessor(bundles)
     org_bundles = [bundle.to_dict() for bundle in bp.bundles]
-    for bundle in bp.bundles:
-        bundle_dict = bundle.to_dict()
     processed_bundles = bp.process_bundles(max_iter=5, time_cutoff=10)
     print(org_bundles)
     print(processed_bundles)
