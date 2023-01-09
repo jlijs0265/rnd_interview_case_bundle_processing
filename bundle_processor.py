@@ -4,6 +4,8 @@ import math
 import time
 import numpy as np
 import json
+
+import Common
 from clustering import KMeans
 
 
@@ -12,8 +14,8 @@ NUM_WAYPOINTS_PER_CLUSTER, NUM_CLUSTERS_TO_CHECK_VICINITY = 2, 3
 OUTLIER_PROPORTION = 0.3
 
 PICKING_TIME = 30  # seconds
-ARRIVING_DURATION = 180 * 1.4  # seconds
-LEAVING_DURATION = 180 * 1.4  # seconds
+ARRIVING_DURATION = 180 * 1.1  # seconds
+LEAVING_DURATION = 180 * 1.1  # seconds
 SPEED = 18 * 0.9  # km/h
 
 
@@ -239,6 +241,7 @@ class Bundle(Location):
     def update_waypoints_distance_and_time(self):
         hub_leaving_duration = LEAVING_DURATION + (len(self.waypoints) - 1) * PICKING_TIME
         self.departing_hub.est_departure_at = self.departing_hub.est_arrival_at + hub_leaving_duration
+        self.etp = self.etd + self.departing_hub.est_departure_at
         prev = self.departing_hub
         for waypoint in self.waypoints:
             if prev is not None:
@@ -374,10 +377,17 @@ class BundleProcessor:
 def load_sample_bundles(fn='./resources/sample_bundles.json'):
     with open(fn, 'r') as f:
         bundles = json.load(f)
+    with open(fn, 'w') as f:
+        json.dump(bundles, f)
     return bundles
 
 
 if __name__ == '__main__':
-    org_bundles = load_sample_bundles()
-    bp = BundleProcessor(org_bundles)
+    bundles = load_sample_bundles()
+    bp = BundleProcessor(bundles)
+    org_bundles = [bundle.to_dict() for bundle in bp.bundles]
+    for bundle in bp.bundles:
+        bundle_dict = bundle.to_dict()
     processed_bundles = bp.process_bundles(max_iter=5, time_cutoff=10)
+    print(org_bundles)
+    print(processed_bundles)
