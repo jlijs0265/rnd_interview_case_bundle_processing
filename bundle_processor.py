@@ -377,8 +377,6 @@ class BundleProcessor:
 def load_sample_bundles(fn='./resources/sample_bundles.json'):
     with open(fn, 'r') as f:
         bundles = json.load(f)
-    with open(fn, 'w') as f:
-        json.dump(bundles, f)
     return bundles
 
 
