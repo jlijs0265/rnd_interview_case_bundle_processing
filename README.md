@@ -28,7 +28,7 @@
 
 ### 실행 환경 및 방법
 
-* python3.x
+* python3.x (python 3.10 미지원)
 * requirements
 ```
 pip install -r requirements.txt
